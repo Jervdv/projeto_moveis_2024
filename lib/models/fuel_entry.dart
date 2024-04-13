@@ -1,18 +1,21 @@
 class FuelEntry {
   DateTime date;
-  double liters;
+  late double liters;
+  double totalPrice;
   double pricePerLiter;
-  int odometer;
+  double odometer;
   String fuelType;
   String gasStationName;
   bool isDeleted = false;
 
   FuelEntry({
     required this.date,
-    required this.liters,
     required this.pricePerLiter,
     required this.odometer,
     required this.fuelType,
     required this.gasStationName,
-  });
+    required this.totalPrice,
+  }) {
+    liters = totalPrice / pricePerLiter;
+  }
 }

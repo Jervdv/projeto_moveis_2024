@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_moveis_2024/models/fuel_entry.dart';
+import 'package:projeto_moveis_2024/repositories/fuel_entries_repository.dart';
+import 'package:provider/provider.dart';
 
 class NewEntryScreen extends StatefulWidget {
   @override
@@ -10,14 +13,33 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
   final TextEditingController _odometerController = TextEditingController();
   final TextEditingController _pricePerLiterController =
       TextEditingController();
+  final TextEditingController _totalPriceController = TextEditingController();
   final TextEditingController _stationNameController = TextEditingController();
+  DateTime selectedDate = DateTime.now();
   String _fuelType = 'Gasolina';
+
+  saveFuelEntry() {
+    if (_formKey.currentState!.validate()) {
+      final fuelEntriesRepository = context.read<FuelEntriesRepository>();
+
+      fuelEntriesRepository.saveFuelEntry(FuelEntry(
+          date: selectedDate,
+          fuelType: _fuelType,
+          gasStationName: _stationNameController.text,
+          odometer: double.parse(_odometerController.text),
+          pricePerLiter: double.parse(_pricePerLiterController.text),
+          totalPrice: double.parse(_totalPriceController.text)));
+    }
+
+    Navigator.pop(context);
+  }
 
   @override
   void dispose() {
     _odometerController.dispose();
     _pricePerLiterController.dispose();
     _stationNameController.dispose();
+    _totalPriceController.dispose();
     super.dispose();
   }
 
@@ -33,6 +55,33 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                InputDatePickerFormField(
+                  firstDate: DateTime(2023),
+                  lastDate: DateTime.now(),
+                  initialDate: selectedDate,
+                  acceptEmptyDate: false,
+                  fieldLabelText: 'Data do Abastecimento',
+                  onDateSubmitted: (date) {
+                    setState(() {
+                      selectedDate = date;
+                    });
+                  },
+                  onDateSaved: (date) {
+                    setState(() {
+                      selectedDate = date;
+                    });
+                  },
+                ),
+                TextFormField(
+                  controller: _stationNameController,
+                  decoration: const InputDecoration(labelText: 'Nome do posto'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, insira o nome do posto';
+                    }
+                    return null;
+                  },
+                ),
                 TextFormField(
                   controller: _odometerController,
                   decoration: const InputDecoration(
@@ -41,6 +90,18 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor, insira a quilometragem';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _totalPriceController,
+                  decoration: const InputDecoration(labelText: 'Preço Total'),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, insira o preço do abastecimento';
                     }
                     return null;
                   },
@@ -79,28 +140,18 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                     );
                   }).toList(),
                 ),
-                TextFormField(
-                  controller: _stationNameController,
-                  decoration: const InputDecoration(labelText: 'Nome do posto'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira o nome do posto';
-                    }
-                    return null;
-                  },
-                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        // Aqui você pode adicionar a lógica para salvar os dados ou alguma ação após o formulário ser validado e salvo
+                        // TODO: save on repository
+                        saveFuelEntry();
                         print('Odômetro: ${_odometerController.text}');
                         print(
                             'Preço por Litro: ${_pricePerLiterController.text}');
                         print('Tipo de Combustível: $_fuelType');
                         print('Nome do Posto: ${_stationNameController.text}');
-                        Navigator.pop(context);
                       }
                     },
                     child: const Text('Registrar'),
