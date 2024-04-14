@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:projeto_moveis_2024/models/dashboard_data.dart';
 import 'package:projeto_moveis_2024/models/fuel_entry.dart';
 
 class FuelEntriesRepository extends ChangeNotifier {
@@ -18,7 +19,7 @@ class FuelEntriesRepository extends ChangeNotifier {
     _fuelEntries.addAll(
       [
         FuelEntry(
-          date: DateTime(2024, 11, 30),
+          date: DateTime(2024, 1, 31),
           fuelType: 'Gasolina',
           gasStationName: 'Shell Centro',
           totalPrice: 100,
@@ -26,7 +27,7 @@ class FuelEntriesRepository extends ChangeNotifier {
           pricePerLiter: 6.50,
         ),
         FuelEntry(
-          date: DateTime(2024, 11, 30),
+          date: DateTime(2024, 3, 27),
           fuelType: 'Gasolina',
           gasStationName: 'Shell Centro',
           totalPrice: 100,
@@ -34,10 +35,10 @@ class FuelEntriesRepository extends ChangeNotifier {
           pricePerLiter: 6.50,
         ),
         FuelEntry(
-          date: DateTime(2024, 11, 30),
+          date: DateTime(2024, 2, 10),
           fuelType: 'Gasolina',
           gasStationName: 'Shell Centro',
-          totalPrice: 100,
+          totalPrice: 150,
           odometer: 42400,
           pricePerLiter: 6.50,
         ),
@@ -50,6 +51,25 @@ class FuelEntriesRepository extends ChangeNotifier {
     return fuelEntries
         .where((fuelEntry) => fuelEntry.isDeleted == !showDeleted)
         .toList();
+  }
+
+  DashboardData getDashboardData() {
+    double totalValue = fuelEntries.fold(
+        0, (double sum, FuelEntry entry) => sum + entry.totalPrice);
+    double meanValue = totalValue / fuelEntries.length;
+    DateTime lastRefuelDate = fuelEntries
+        .reduce((currentMax, element) =>
+            element.date.isAfter(currentMax.date) ? element : currentMax)
+        .date;
+    double totalLiters = fuelEntries.fold(
+        0, (double sum, FuelEntry entry) => sum + entry.liters);
+    return DashboardData(
+      totalValue: totalValue,
+      meanValue: meanValue,
+      totalLiters: totalLiters,
+      lastRefuelDate: lastRefuelDate,
+      entriesCount: fuelEntries.length,
+    );
   }
 
   // deleteFuelEntry(FuelEntry fuelEntry) {

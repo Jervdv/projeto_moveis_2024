@@ -3,8 +3,9 @@ import 'package:projeto_moveis_2024/repositories/fuel_entries_repository.dart';
 import 'package:projeto_moveis_2024/widgets/add_button.dart';
 import 'package:projeto_moveis_2024/widgets/dashboard_card.dart';
 import 'package:provider/provider.dart';
-import 'package:chart_sparkline/chart_sparkline.dart';
+import '../models/dashboard_data.dart';
 import '../models/fuel_entry.dart';
+import 'package:intl/intl.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -20,10 +21,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     final FuelEntriesRepository fuelEntriesRepository =
         context.watch<FuelEntriesRepository>();
-    for (var i = 0; i < fuelEntriesRepository.fuelEntries.length; i++) {
-      print(fuelEntriesRepository.fuelEntries[i].gasStationName);
-    }
 
+    DashboardData data = fuelEntriesRepository.getDashboardData();
+
+    var outputFormat = DateFormat('dd/MM/yyyy');
+    var outputDate = outputFormat.format(data.lastRefuelDate);
+    print(outputDate);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -60,33 +63,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
               padding: const EdgeInsets.only(top: 50),
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
-                child: const Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(
+                    const Text(
                       'Gerenciador de Combustível',
                       style:
                           TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.all(10),
                     ),
                     DashboardCard(
                       title: 'Valor Total',
-                      subtitle: 'R\$ 1245,00',
+                      subtitle: 'R\$ ${data.totalValue.toStringAsFixed(2)}',
                       width: 0.8,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         DashboardCard(
-                          title: 'Distância Percorrida',
-                          subtitle: '500.0 km',
+                          title: 'Valor médio',
+                          subtitle: 'R\$ ${data.meanValue.toStringAsFixed(2)}',
                           width: 0.4,
                         ),
                         DashboardCard(
                           title: 'Litros abastecidos',
-                          subtitle: '125.0L',
+                          subtitle: '${data.totalLiters.toStringAsFixed(1)}L',
                           width: 0.4,
                         ),
                       ],
@@ -96,12 +99,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       children: [
                         DashboardCard(
                           title: 'Ultimo Abastecimento',
-                          subtitle: '14/04/2024',
+                          subtitle: outputDate,
                           width: 0.4,
                         ),
                         DashboardCard(
                           title: 'Registros',
-                          subtitle: '3',
+                          subtitle: '${data.entriesCount}',
                           width: 0.4,
                         ),
                       ],
