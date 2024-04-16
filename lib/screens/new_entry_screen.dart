@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:projeto_moveis_2024/models/fuel_entry.dart';
 import 'package:projeto_moveis_2024/repositories/fuel_entries_repository.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,8 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
       TextEditingController();
   final TextEditingController _totalPriceController = TextEditingController();
   final TextEditingController _stationNameController = TextEditingController();
-  DateTime selectedDate = DateTime.now();
+  final TextEditingController _dateController = TextEditingController();
+
   String _fuelType = 'Gasolina';
   String _gasFlag = 'Shell';
 
@@ -23,8 +25,11 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
     if (_formKey.currentState!.validate()) {
       final fuelEntriesRepository = context.read<FuelEntriesRepository>();
 
+      final DateFormat formatter = DateFormat('dd/MM/yyyy');
+      DateTime dateToAdd = formatter.parseStrict(_dateController.text);
+
       fuelEntriesRepository.saveFuelEntry(FuelEntry(
-          date: selectedDate,
+          date: dateToAdd,
           fuelType: _fuelType,
           gasFlag: _gasFlag,
           gasStationName: _stationNameController.text,
@@ -57,22 +62,28 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                InputDatePickerFormField(
-                  firstDate: DateTime(2023),
-                  lastDate: DateTime.now(),
-                  initialDate: selectedDate,
-                  acceptEmptyDate: false,
-                  fieldLabelText: 'Data do Abastecimento',
-                  onDateSubmitted: (date) {
-                    setState(() {
-                      selectedDate = date;
-                    });
-                  },
-                  onDateSaved: (date) {
-                    setState(() {
-                      selectedDate = date;
-                    });
-                  },
+                TextField(
+                      controller: _dateController,
+                        decoration: const InputDecoration(
+                                  icon: Icon(Icons.calendar_today),
+                                labelText: "Digite a data"
+                          ),
+                        readOnly: true,  // when true user cannot edit text
+                        onTap: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(), //get today's date
+                          firstDate:DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                          lastDate: DateTime(2101)
+                  );
+
+                    if(pickedDate != null ){
+                        String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+                        setState(() {
+                          _dateController.text = formattedDate;
+                        });
+                    }
+                  }
                 ),
                 TextFormField(
                   controller: _stationNameController,
@@ -118,6 +129,9 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Por favor, insira a quilometragem';
                     }
+                    if (double.tryParse(value) == null) {
+                      return 'Digite um valor válido para o odômetro.';
+                    }
                     return null;
                   },
                 ),
@@ -129,6 +143,9 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor, insira o preço do abastecimento';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'Digite um valor válido para o preço total.';
                     }
                     return null;
                   },
@@ -142,6 +159,9 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor, insira o preço por litro';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'Digite um valor válido para o preço por litro.';
                     }
                     return null;
                   },
@@ -172,13 +192,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        // TODO: save on repository
                         saveFuelEntry();
-                        print('Odômetro: ${_odometerController.text}');
-                        print(
-                            'Preço por Litro: ${_pricePerLiterController.text}');
-                        print('Tipo de Combustível: $_fuelType');
-                        print('Nome do Posto: ${_stationNameController.text}');
                       }
                     },
                     child: const Text('Registrar'),

@@ -3,6 +3,7 @@ import 'package:projeto_moveis_2024/models/fuel_entry.dart';
 import 'package:provider/provider.dart';
 
 import '../repositories/fuel_entries_repository.dart';
+import 'package:intl/intl.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -20,8 +21,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
       context.read<FuelEntriesRepository>();
 
     entries = fuelEntriesRepository.getFuelEntries();
-
-    print(entries.length);
 
     return Scaffold(
       appBar: AppBar(
@@ -51,12 +50,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(entries[index].date.toString(), style: const TextStyle(fontSize: 18),),
+                              child: Text(formatDateTime(entries[index].date), style: const TextStyle(fontSize: 18),),
                             ),
                           ],
                         ),
                         ListTile(
-                          title: Text('Abasteceu R\$ ${entries[index].totalPrice.toStringAsFixed(2)} de ${entries[index].fuelType} por R\$ ${entries[index].pricePerLiter.toStringAsFixed(2)}/l'),
+                          title: Text('Abasteceu R\$ ${entries[index].totalPrice.toStringAsFixed(2)} de ${entries[index].fuelType} por R\$ ${entries[index].pricePerLiter.toStringAsFixed(2)} por litro'),
                         ),
                       ],
                     ),
@@ -66,4 +65,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
             ),
     );
   }
+}
+
+String formatDateTime(DateTime dateTime) {
+  final DateFormat formatter = DateFormat('dd/MM/yyyy');
+  return formatter.format(dateTime);
 }
