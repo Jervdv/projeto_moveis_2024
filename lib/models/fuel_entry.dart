@@ -6,6 +6,7 @@ class FuelEntry {
   double odometer;
   String fuelType;
   String gasStationName;
+  String gasFlag;
   bool isDeleted = false;
 
   FuelEntry({
@@ -15,6 +16,7 @@ class FuelEntry {
     required this.fuelType,
     required this.gasStationName,
     required this.totalPrice,
+    required this.gasFlag,
   }) {
     liters = totalPrice / pricePerLiter;
   }

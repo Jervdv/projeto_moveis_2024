@@ -17,6 +17,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
   final TextEditingController _stationNameController = TextEditingController();
   DateTime selectedDate = DateTime.now();
   String _fuelType = 'Gasolina';
+  String _gasFlag = 'Shell';
 
   saveFuelEntry() {
     if (_formKey.currentState!.validate()) {
@@ -25,6 +26,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
       fuelEntriesRepository.saveFuelEntry(FuelEntry(
           date: selectedDate,
           fuelType: _fuelType,
+          gasFlag: _gasFlag,
           gasStationName: _stationNameController.text,
           odometer: double.parse(_odometerController.text),
           pricePerLiter: double.parse(_pricePerLiterController.text),
@@ -81,6 +83,31 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                     }
                     return null;
                   },
+                ),
+                 DropdownButtonFormField(
+                  value: _gasFlag,
+                  decoration:
+                      const InputDecoration(labelText: 'Bandeira'),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _gasFlag = newValue!;
+                    });
+                  },
+                  items: <String>[
+                    'Petrobras',
+                    'Ipiranga',
+                    'Shell',
+                    'Ale',
+                    'Boxler',
+                    'Setee',
+                    'Rede Graal',
+                    'Outros',
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
                 ),
                 TextFormField(
                   controller: _odometerController,

@@ -25,6 +25,7 @@ class FuelEntriesRepository extends ChangeNotifier {
           totalPrice: 100,
           odometer: 42000,
           pricePerLiter: 6.50,
+          gasFlag: 'Shell',
         ),
         FuelEntry(
           date: DateTime(2024, 3, 27),
@@ -33,6 +34,7 @@ class FuelEntriesRepository extends ChangeNotifier {
           totalPrice: 100,
           odometer: 42200,
           pricePerLiter: 6.50,
+          gasFlag: 'Petrobras',
         ),
         FuelEntry(
           date: DateTime(2024, 2, 10),
@@ -41,6 +43,25 @@ class FuelEntriesRepository extends ChangeNotifier {
           totalPrice: 150,
           odometer: 42400,
           pricePerLiter: 6.50,
+          gasFlag: 'Shell',
+        ),
+        FuelEntry(
+          date: DateTime(2024, 2, 10),
+          fuelType: 'Gasolina',
+          gasStationName: 'Shell Centro',
+          totalPrice: 150,
+          odometer: 42400,
+          pricePerLiter: 6.50,
+          gasFlag: 'Shell',
+        ),
+        FuelEntry(
+          date: DateTime(2024, 2, 10),
+          fuelType: 'Gasolina',
+          gasStationName: 'Shell Centro',
+          totalPrice: 150,
+          odometer: 42400,
+          pricePerLiter: 6.50,
+          gasFlag: 'Outros',
         ),
       ],
     );
@@ -72,6 +93,25 @@ class FuelEntriesRepository extends ChangeNotifier {
     );
   }
 
+  Map<String, double> getFlagChartData() {
+    Map<String, double> gasFlagData = {};
+    double totalCount = fuelEntries.length.toDouble();
+
+    for (FuelEntry entry in fuelEntries) {
+      if (gasFlagData.containsKey(entry.gasFlag)) {
+        gasFlagData[entry.gasFlag] = gasFlagData[entry.gasFlag]! + 1;
+      } else {
+        gasFlagData[entry.gasFlag] = 1;
+      }
+    }
+
+    var keys = gasFlagData.keys.toList();
+    for (String key in keys) {
+        gasFlagData[key] = gasFlagData[key]! / totalCount;
+    }
+
+    return gasFlagData;
+  }
   // deleteFuelEntry(FuelEntry fuelEntry) {
   //   final oldNote = _notes.firstWhere(
   //     (n) => n.title == note.title && n.description == note.description,
