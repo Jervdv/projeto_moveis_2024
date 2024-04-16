@@ -23,14 +23,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
         context.watch<FuelEntriesRepository>();
 
     DashboardData data = fuelEntriesRepository.getDashboardData();
-    Map<String,double> pieChartData = fuelEntriesRepository.getFlagChartData();
+    Map<String, double> pieChartData = fuelEntriesRepository.getFlagChartData();
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
         decoration: BoxDecoration(
-        gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomLeft, colors: [ Colors.blue.shade300, Colors.white],)
-        ),
+            gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomLeft,
+          colors: [Colors.blue.shade300, Colors.white],
+        )),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
@@ -44,9 +47,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         const Text(
-                          'App Combustível',
-                          style:
-                              TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          'GasTrip',
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                         const Padding(
                           padding: EdgeInsets.all(10),
@@ -61,12 +64,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           children: [
                             DashboardCard(
                               title: 'Gasto médio',
-                              subtitle: 'R\$ ${data.meanValue.toStringAsFixed(2)}',
+                              subtitle:
+                                  'R\$ ${data.meanValue.toStringAsFixed(2)}',
                               width: 0.52,
                             ),
                             DashboardCard(
                               title: 'Litros abastecidos',
-                              subtitle: '${data.totalLiters.toStringAsFixed(1)}L',
+                              subtitle:
+                                  '${data.totalLiters.toStringAsFixed(1)}L',
                               width: 0.4,
                             ),
                           ],
@@ -79,9 +84,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               chartRadius: 230,
                               dataMap: pieChartData,
                               chartType: ChartType.ring,
-                              colorList: [Colors.blue.shade600,Colors.blue.shade900,Colors.blueGrey.shade200, Colors.indigo.shade600, Colors.indigo.shade100],
-                              chartValuesOptions: const ChartValuesOptions(showChartValuesInPercentage: true, decimalPlaces: 2),
-                              legendOptions: const LegendOptions(legendPosition: LegendPosition.right, showLegendsInRow: false),
+                              colorList: [
+                                Colors.blue.shade600,
+                                Colors.blue.shade900,
+                                Colors.blueGrey.shade200,
+                                Colors.indigo.shade600,
+                                Colors.indigo.shade100
+                              ],
+                              chartValuesOptions: const ChartValuesOptions(
+                                  showChartValuesInPercentage: true,
+                                  decimalPlaces: 2),
+                              legendOptions: const LegendOptions(
+                                  legendPosition: LegendPosition.right,
+                                  showLegendsInRow: false),
                             ),
                           ),
                         ),
@@ -95,8 +110,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    NavigationButton(imagePath: 'lib/assets/img/history-button.png', route: '/history',),
-                    NavigationButton(imagePath: 'lib/assets/img/add-button.png', route: '/new_entry',),
+                    NavigationButton(
+                      imagePath: 'lib/assets/img/history-button.png',
+                      route: '/history',
+                    ),
+                    NavigationButton(
+                      imagePath: 'lib/assets/img/add-button.png',
+                      route: '/new_entry',
+                    ),
                   ],
                 ),
               ),
