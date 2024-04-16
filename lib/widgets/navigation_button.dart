@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
-class AddButton extends StatelessWidget {
+class NavigationButton extends StatelessWidget {
   final String imagePath;
+  final String route;
 
-  const AddButton({
+  const NavigationButton({
     Key? key,
     required this.imagePath,
+    required this.route,
   }) : super(key: key);
 
   @override
@@ -16,7 +18,7 @@ class AddButton extends StatelessWidget {
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30), // Splash color
           onTap: () {
-            Navigator.pushNamed(context, '/new_entry');
+            Navigator.pushNamed(context, route);
           },
           child: Ink.image(
             image: AssetImage(imagePath),

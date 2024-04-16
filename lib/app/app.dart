@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_moveis_2024/screens/history_screen.dart';
 import '../screens/dashboard_screen.dart';
 import '../screens/new_entry_screen.dart';
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       home: const DashboardScreen(),
       routes: {
         '/new_entry': (context) => NewEntryScreen(),
-        // '/third': (context) => ThirdScreen(),
+        '/history': (context) => const HistoryScreen(),
       },
     );
   }
