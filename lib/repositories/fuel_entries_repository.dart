@@ -63,15 +63,35 @@ class FuelEntriesRepository extends ChangeNotifier {
           pricePerLiter: 6.50,
           gasFlag: 'Outros',
         ),
+        FuelEntry(
+          date: DateTime(2024, 2, 10),
+          fuelType: 'Gasolina',
+          gasStationName: 'Shell Centro',
+          totalPrice: 150,
+          odometer: 42400,
+          pricePerLiter: 6.50,
+          gasFlag: 'Outros',
+        ),
+        FuelEntry(
+          date: DateTime(2024, 2, 10),
+          fuelType: 'Gasolina',
+          gasStationName: 'Shell Centro',
+          totalPrice: 150,
+          odometer: 42400,
+          pricePerLiter: 6.50,
+          gasFlag: 'Outros',
+        ),
       ],
     );
     notifyListeners();
   }
 
-  List<FuelEntry> getFuelEntries(bool showDeleted) {
-    return fuelEntries
-        .where((fuelEntry) => fuelEntry.isDeleted == !showDeleted)
-        .toList();
+  List<FuelEntry> getFuelEntries() {
+    var entries = fuelEntries.toList();
+
+    entries.sort((a, b) => b.date.compareTo(a.date));
+
+    return entries;
   }
 
   DashboardData getDashboardData() {

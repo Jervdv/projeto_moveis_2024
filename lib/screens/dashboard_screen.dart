@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_moveis_2024/repositories/fuel_entries_repository.dart';
-import 'package:projeto_moveis_2024/widgets/add_button.dart';
+import 'package:projeto_moveis_2024/widgets/navigation_button.dart';
 import 'package:projeto_moveis_2024/widgets/dashboard_card.dart';
 import 'package:provider/provider.dart';
 import '../models/dashboard_data.dart';
 import '../models/fuel_entry.dart';
-import 'package:intl/intl.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -24,47 +23,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         context.watch<FuelEntriesRepository>();
 
     DashboardData data = fuelEntriesRepository.getDashboardData();
-
     Map<String,double> pieChartData = fuelEntriesRepository.getFlagChartData();
-    var teste = pieChartData.values.toList();
-    for (var a in teste)
-    {
-      print(a);
-    }
-    var outputFormat = DateFormat('dd/MM/yyyy');
-    var outputDate = outputFormat.format(data.lastRefuelDate);
+
     return Scaffold(
       backgroundColor: Colors.white,
-      // appBar: AppBar(
-      //   elevation: 2.0,
-      //   backgroundColor: Colors.white,
-      //   title: const Text('Dashboard',
-      //       style: TextStyle(
-      //           color: Colors.black,
-      //           fontWeight: FontWeight.w700,
-      //           fontSize: 30.0)),
-      //   actions: <Widget>[
-      //     Container(
-      //       margin: const EdgeInsets.only(right: 8.0),
-      //       child: const Row(
-      //         mainAxisAlignment: MainAxisAlignment.center,
-      //         crossAxisAlignment: CrossAxisAlignment.center,
-      //         children: <Widget>[
-      //           Text('BCC-2024/1',
-      //               style: TextStyle(
-      //                   color: Colors.blue,
-      //                   fontWeight: FontWeight.w700,
-      //                   fontSize: 14.0)),
-      //           Icon(Icons.arrow_drop_down, color: Colors.black54)
-      //         ],
-      //       ),
-      //     )
-      //   ],
-      // ),
       body: Container(
-              decoration: BoxDecoration(
+        decoration: BoxDecoration(
         gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomLeft, colors: [ Colors.blue.shade300, Colors.white],)
-      ),
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
@@ -127,10 +93,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               const Padding(
                 padding: EdgeInsets.all(16.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Text('teste'),
-                    AddButton(imagePath: 'lib/assets/img/add-button.png'),
+                    NavigationButton(imagePath: 'lib/assets/img/history-button.png', route: '/history',),
+                    NavigationButton(imagePath: 'lib/assets/img/add-button.png', route: '/new_entry',),
                   ],
                 ),
               ),
