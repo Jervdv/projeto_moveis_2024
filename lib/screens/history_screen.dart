@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_moveis_2024/models/fuel_entry.dart';
 import 'package:provider/provider.dart';
-
-import '../repositories/fuel_entries_repository.dart';
+import 'package:projeto_moveis_2024/models/fuel_entry.dart';
+import 'package:projeto_moveis_2024/repositories/fuel_entries_repository.dart';
 import 'package:intl/intl.dart';
+import 'fuel_entry_details_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -13,27 +13,51 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
- List<FuelEntry> entries = [];
+  @override
+  void initState() {
+    super.initState();
+    _loadEntries();
+  }
+
+  Future<void> _loadEntries() async {
+    final fuelEntriesRepository = context.read<FuelEntriesRepository>();
+    await fuelEntriesRepository.retrieveFuelEntriesFromDb(); // Ensure you have this method to load data from Firestore
+  }
 
   @override
   Widget build(BuildContext context) {
-    final FuelEntriesRepository fuelEntriesRepository =
-      context.read<FuelEntriesRepository>();
-
-    entries = fuelEntriesRepository.getFuelEntries();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Meus Abastecimentos'),
       ),
-      body: entries.isEmpty
-          ? const Center(
+      body: Consumer<FuelEntriesRepository>(
+        builder: (context, fuelEntriesRepository, child) {
+          final entries = fuelEntriesRepository.fuelEntries;
+
+          if (entries.isEmpty) {
+            return const Center(
               child: Text('Nenhum abastecimento registrado.'),
-            )
-          : ListView.builder(
-              itemCount: entries.length,
-              itemBuilder: (context, index) {
-                return Padding(
+            );
+          }
+
+          return ListView.builder(
+            itemCount: entries.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FuelEntryDetailsScreen(entry: entries[index]),
+                    ),
+                  );
+
+                  if (result == true) {
+                    // Refresh the entries if a deletion occurred
+                    await _loadEntries();
+                  }
+                },
+                child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   child: Container(
                     color: Colors.grey.shade300,
@@ -41,16 +65,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                       Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(entries[index].gasStationName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                              child: Text(entries[index].gasStationName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(formatDateTime(entries[index].date), style: const TextStyle(fontSize: 18),),
+                              child: Text(formatDateTime(entries[index].date), style: const TextStyle(fontSize: 18)),
                             ),
                           ],
                         ),
@@ -60,9 +84,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       ],
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

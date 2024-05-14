@@ -7,9 +7,11 @@ class FuelEntry {
   String fuelType;
   String gasStationName;
   String gasFlag;
+  String id;
   bool isDeleted = false;
 
   FuelEntry({
+    required this.id,
     required this.date,
     required this.pricePerLiter,
     required this.odometer,
