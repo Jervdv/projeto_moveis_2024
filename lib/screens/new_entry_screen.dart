@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:projeto_moveis_2024/models/fuel_entry.dart';
 import 'package:projeto_moveis_2024/repositories/fuel_entries_repository.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class NewEntryScreen extends StatefulWidget {
   @override
@@ -28,7 +29,10 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
       final DateFormat formatter = DateFormat('dd/MM/yyyy');
       DateTime dateToAdd = formatter.parseStrict(_dateController.text);
 
+      var uuid = const Uuid();
+
       fuelEntriesRepository.saveFuelEntry(FuelEntry(
+          id: uuid.v1(),
           date: dateToAdd,
           fuelType: _fuelType,
           gasFlag: _gasFlag,

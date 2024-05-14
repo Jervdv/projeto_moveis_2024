@@ -28,9 +28,34 @@ class FuelEntriesRepository extends ChangeNotifier {
     db = DBFirestore.get();
   }
 
+  deleteFuelEntry(String id) async {
+    await db.collection('users/${auth.usuario!.uid}/fuel_entries').doc(id).delete();
+    _fuelEntries.removeWhere((entry) => entry.id == id);
+    notifyListeners();
+  }
+
+  Future<void> updateFuelEntry(FuelEntry fuelEntry) async {
+    final docRef = db.collection('users/${auth.usuario!.uid}/fuel_entries').doc(fuelEntry.id);
+    await docRef.update({
+      'date': fuelEntry.date,
+      'totalPrice': fuelEntry.totalPrice,
+      'pricePerLiter': fuelEntry.pricePerLiter,
+      'odometer': fuelEntry.odometer,
+      'fuelType': fuelEntry.fuelType,
+      'gasStationName': fuelEntry.gasStationName,
+      'gasFlag': fuelEntry.gasFlag,
+    });
+
+    final index = _fuelEntries.indexWhere((entry) => entry.id == fuelEntry.id);
+    if (index != -1) {
+      _fuelEntries[index] = fuelEntry;
+      notifyListeners();
+    }
+  }
 
   saveFuelEntry(FuelEntry fuelEntry) async {
-    await db.collection('users/${auth.usuario!.uid}/fuel_entries').doc().set({
+    await db.collection('users/${auth.usuario!.uid}/fuel_entries').doc(fuelEntry.id).set({
+      'id': fuelEntry.id,
       'date': fuelEntry.date,
       'totalPrice': fuelEntry.totalPrice,
       'pricePerLiter': fuelEntry.pricePerLiter,
@@ -52,6 +77,7 @@ class FuelEntriesRepository extends ChangeNotifier {
 
       for (var doc in snapshot.docs) {
         _fuelEntries.add(FuelEntry(
+          id: doc['id'],
           date: (doc['date'] as Timestamp).toDate(),
           totalPrice: doc['totalPrice'],
           pricePerLiter: doc['pricePerLiter'],
