@@ -17,11 +17,33 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   List<FuelEntry> entries = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFuelEntries();
+  }
+
+  Future<void> _loadFuelEntries() async {
+    final FuelEntriesRepository fuelEntriesRepository = context.read<FuelEntriesRepository>();
+    await fuelEntriesRepository.retrieveFuelEntriesFromDb();
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final FuelEntriesRepository fuelEntriesRepository =
-        context.watch<FuelEntriesRepository>();
+    final FuelEntriesRepository fuelEntriesRepository = context.watch<FuelEntriesRepository>();
+
+    if (isLoading) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
     DashboardData data = fuelEntriesRepository.getDashboardData();
     Map<String, double> pieChartData = fuelEntriesRepository.getFlagChartData();
