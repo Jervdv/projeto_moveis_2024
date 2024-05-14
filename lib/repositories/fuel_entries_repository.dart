@@ -22,8 +22,6 @@ class FuelEntriesRepository extends ChangeNotifier {
 
   _startRepository() {
     _startFirestore();
-    _fuelEntries.clear();
-    retrieveFuelEntriesFromDb();
   }
 
   _startFirestore() {
@@ -47,11 +45,11 @@ class FuelEntriesRepository extends ChangeNotifier {
 
   Future<void> retrieveFuelEntriesFromDb() async {
     if (auth.usuario != null) {
+      _fuelEntries.clear();
       final snapshot = await db
           .collection('users/${auth.usuario!.uid}/fuel_entries')
           .get();
 
-      _fuelEntries.clear();
       for (var doc in snapshot.docs) {
         _fuelEntries.add(FuelEntry(
           date: (doc['date'] as Timestamp).toDate(),
@@ -76,7 +74,6 @@ class FuelEntriesRepository extends ChangeNotifier {
   }
 
   DashboardData getDashboardData() {
-    retrieveFuelEntriesFromDb();
     if (fuelEntries.isEmpty) {
       return DashboardData(totalValue: 0, meanValue: 0, totalLiters: 0, lastRefuelDate: null, entriesCount: 0, isEmpty: true);
     }
