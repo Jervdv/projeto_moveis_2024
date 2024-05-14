@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "207440694897",
+    "project_id": "gastrip-1b263",
+    "storage_bucket": "gastrip-1b263.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:207440694897:android:6e747783b055ac1a7fd5d0",
+        "android_client_info": {
+          "package_name": "com.example.projeto_moveis_2024"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9lEsaUYXvWoWkXLe5FV5RD-NVBc3tUjM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

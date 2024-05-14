@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_moveis_2024/screens/history_screen.dart';
+import 'package:projeto_moveis_2024/screens/login_screen.dart';
+import 'package:projeto_moveis_2024/widgets/auth_check.dart';
 import '../screens/dashboard_screen.dart';
 import '../screens/new_entry_screen.dart';
 
@@ -13,8 +15,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const DashboardScreen(),
+      home: AuthCheck(),
       routes: {
+        '/dashboard': (context) => const DashboardScreen(),
         '/new_entry': (context) => NewEntryScreen(),
         '/history': (context) => const HistoryScreen(),
       },

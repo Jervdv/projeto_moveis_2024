@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_moveis_2024/repositories/fuel_entries_repository.dart';
+import 'package:projeto_moveis_2024/services/auth_service.dart';
 import 'package:projeto_moveis_2024/widgets/navigation_button.dart';
 import 'package:projeto_moveis_2024/widgets/dashboard_card.dart';
 import 'package:provider/provider.dart';
@@ -46,10 +47,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        const Text(
-                          'GasTrip',
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Container(),
+                            ),
+                            const Text(
+                              'GasTrip',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const Spacer(),
+                            IconButton(
+                              icon: const Icon(Icons.logout_outlined),
+                              onPressed: () => context.read<AuthService>().logout(),
+                            ),
+                          ],
                         ),
                         const Padding(
                           padding: EdgeInsets.all(10),
