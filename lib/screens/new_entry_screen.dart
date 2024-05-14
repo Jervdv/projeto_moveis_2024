@@ -67,28 +67,26 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 TextField(
-                      controller: _dateController,
-                        decoration: const InputDecoration(
-                                  icon: Icon(Icons.calendar_today),
-                                labelText: "Digite a data"
-                          ),
-                        readOnly: true,  // when true user cannot edit text
-                        onTap: () async {
-                          DateTime? pickedDate = await showDatePicker(
+                    controller: _dateController,
+                    decoration: const InputDecoration(
+                        icon: Icon(Icons.calendar_today),
+                        labelText: "Digite a data"),
+                    readOnly: true,
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
                           context: context,
-                          initialDate: DateTime.now(), //get today's date
-                          firstDate:DateTime(2000), //DateTime.now() - not to allow to choose before today.
-                          lastDate: DateTime(2101)
-                  );
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101));
 
-                    if(pickedDate != null ){
-                        String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+                      if (pickedDate != null) {
+                        String formattedDate =
+                            DateFormat('dd/MM/yyyy').format(pickedDate);
                         setState(() {
                           _dateController.text = formattedDate;
                         });
-                    }
-                  }
-                ),
+                      }
+                    }),
                 TextFormField(
                   controller: _stationNameController,
                   decoration: const InputDecoration(labelText: 'Nome do posto'),
@@ -99,10 +97,9 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                     return null;
                   },
                 ),
-                 DropdownButtonFormField(
+                DropdownButtonFormField(
                   value: _gasFlag,
-                  decoration:
-                      const InputDecoration(labelText: 'Bandeira'),
+                  decoration: const InputDecoration(labelText: 'Bandeira'),
                   onChanged: (String? newValue) {
                     setState(() {
                       _gasFlag = newValue!;

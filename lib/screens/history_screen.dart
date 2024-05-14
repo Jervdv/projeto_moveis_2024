@@ -21,7 +21,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Future<void> _loadEntries() async {
     final fuelEntriesRepository = context.read<FuelEntriesRepository>();
-    await fuelEntriesRepository.retrieveFuelEntriesFromDb(); // Ensure you have this method to load data from Firestore
+    await fuelEntriesRepository.retrieveFuelEntriesFromDb();
   }
 
   @override
@@ -48,19 +48,20 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   final result = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => FuelEntryDetailsScreen(entry: entries[index]),
+                      builder: (context) =>
+                          FuelEntryDetailsScreen(entry: entries[index]),
                     ),
                   );
 
                   if (result == true) {
-                    // Refresh the entries if a deletion occurred
                     await _loadEntries();
                   }
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   child: Container(
-                    color: Colors.grey.shade300,
+                    color: Colors.lightBlue.shade50,
                     height: 140,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -70,16 +71,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(entries[index].gasStationName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                              child: Text(entries[index].gasStationName,
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold)),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(formatDateTime(entries[index].date), style: const TextStyle(fontSize: 18)),
+                              child: Text(formatDateTime(entries[index].date),
+                                  style: const TextStyle(fontSize: 18)),
                             ),
                           ],
                         ),
                         ListTile(
-                          title: Text('Abasteceu R\$ ${entries[index].totalPrice.toStringAsFixed(2)} de ${entries[index].fuelType} por R\$ ${entries[index].pricePerLiter.toStringAsFixed(2)} por litro'),
+                          title: Text(
+                              'Abasteceu R\$ ${entries[index].totalPrice.toStringAsFixed(2)} de ${entries[index].fuelType} por R\$ ${entries[index].pricePerLiter.toStringAsFixed(2)} por litro'),
                         ),
                       ],
                     ),

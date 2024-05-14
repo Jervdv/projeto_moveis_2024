@@ -13,6 +13,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData appTheme = ThemeData(
+      datePickerTheme: DatePickerThemeData(
+        headerBackgroundColor: Colors.lightBlue.shade200,
+        backgroundColor: Colors.lightBlue.shade50,
+        dividerColor: Colors.blue,
+        todayForegroundColor: WidgetStateColor.resolveWith(
+          (states) => Colors.blue,
+        ),
+        todayBackgroundColor: WidgetStateColor.resolveWith(
+          (states) => Colors.blue.shade100,
+        ),
+        confirmButtonStyle: ButtonStyle(
+          foregroundColor: WidgetStateColor.resolveWith(
+            (states) => Colors.blue,
+          ),
+        ),
+        cancelButtonStyle: ButtonStyle(
+          foregroundColor: WidgetStateColor.resolveWith(
+            (states) => Colors.blue,
+          ),
+        ),
+      ),
       primarySwatch: Colors.blue,
       scaffoldBackgroundColor: Colors.white,
       appBarTheme: const AppBarTheme(
@@ -27,10 +48,11 @@ class MyApp extends StatelessWidget {
         bodyMedium: TextStyle(color: Colors.black),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.white, backgroundColor: Colors.blue,
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.blue,
+        ),
       ),
-  ),
     );
 
     return MaterialApp(

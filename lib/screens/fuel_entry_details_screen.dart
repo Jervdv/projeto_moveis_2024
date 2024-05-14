@@ -27,11 +27,16 @@ class _FuelEntryDetailsScreenState extends State<FuelEntryDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    _odometerController = TextEditingController(text: widget.entry.odometer.toString());
-    _pricePerLiterController = TextEditingController(text: widget.entry.pricePerLiter.toString());
-    _totalPriceController = TextEditingController(text: widget.entry.totalPrice.toString());
-    _stationNameController = TextEditingController(text: widget.entry.gasStationName);
-    _dateController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(widget.entry.date));
+    _odometerController =
+        TextEditingController(text: widget.entry.odometer.toString());
+    _pricePerLiterController =
+        TextEditingController(text: widget.entry.pricePerLiter.toString());
+    _totalPriceController =
+        TextEditingController(text: widget.entry.totalPrice.toString());
+    _stationNameController =
+        TextEditingController(text: widget.entry.gasStationName);
+    _dateController = TextEditingController(
+        text: DateFormat('dd/MM/yyyy').format(widget.entry.date));
     _fuelType = widget.entry.fuelType;
     _gasFlag = widget.entry.gasFlag;
   }
@@ -54,7 +59,7 @@ class _FuelEntryDetailsScreenState extends State<FuelEntryDetailsScreen> {
       DateTime dateToAdd = formatter.parseStrict(_dateController.text);
 
       fuelEntriesRepository.updateFuelEntry(FuelEntry(
-        id: widget.entry.id, // Assuming FuelEntry has an id field
+        id: widget.entry.id,
         date: dateToAdd,
         fuelType: _fuelType,
         gasFlag: _gasFlag,
@@ -86,28 +91,27 @@ class _FuelEntryDetailsScreenState extends State<FuelEntryDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 TextField(
-                  controller: _dateController,
-                  decoration: const InputDecoration(
-                    icon: Icon(Icons.calendar_today),
-                    labelText: "Digite a data"
-                  ),
-                  readOnly: true,
-                  onTap: () async {
-                    DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
-                    );
+                    controller: _dateController,
+                    decoration: const InputDecoration(
+                        icon: Icon(Icons.calendar_today),
+                        labelText: "Digite a data"),
+                    readOnly: true,
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                      );
 
-                    if (pickedDate != null) {
-                      String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
-                      setState(() {
-                        _dateController.text = formattedDate;
-                      });
-                    }
-                  }
-                ),
+                      if (pickedDate != null) {
+                        String formattedDate =
+                            DateFormat('dd/MM/yyyy').format(pickedDate);
+                        setState(() {
+                          _dateController.text = formattedDate;
+                        });
+                      }
+                    }),
                 TextFormField(
                   controller: _stationNameController,
                   decoration: const InputDecoration(labelText: 'Nome do posto'),
@@ -144,7 +148,8 @@ class _FuelEntryDetailsScreenState extends State<FuelEntryDetailsScreen> {
                 ),
                 TextFormField(
                   controller: _odometerController,
-                  decoration: const InputDecoration(labelText: 'Quilometragem no Odômetro'),
+                  decoration: const InputDecoration(
+                      labelText: 'Quilometragem no Odômetro'),
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -159,7 +164,8 @@ class _FuelEntryDetailsScreenState extends State<FuelEntryDetailsScreen> {
                 TextFormField(
                   controller: _totalPriceController,
                   decoration: const InputDecoration(labelText: 'Preço Total'),
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor, insira o preço do abastecimento';
@@ -172,8 +178,10 @@ class _FuelEntryDetailsScreenState extends State<FuelEntryDetailsScreen> {
                 ),
                 TextFormField(
                   controller: _pricePerLiterController,
-                  decoration: const InputDecoration(labelText: 'Preço Por Litro'),
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  decoration:
+                      const InputDecoration(labelText: 'Preço Por Litro'),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor, insira o preço por litro';
@@ -186,7 +194,8 @@ class _FuelEntryDetailsScreenState extends State<FuelEntryDetailsScreen> {
                 ),
                 DropdownButtonFormField(
                   value: _fuelType,
-                  decoration: const InputDecoration(labelText: 'Tipo de Combustível'),
+                  decoration:
+                      const InputDecoration(labelText: 'Tipo de Combustível'),
                   onChanged: (String? newValue) {
                     setState(() {
                       _fuelType = newValue!;

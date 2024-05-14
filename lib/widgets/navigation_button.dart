@@ -14,16 +14,16 @@ class NavigationButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipOval(
       child: Material(
-        color: Colors.transparent, // Button color
+        color: Colors.transparent,
         child: InkWell(
-          splashColor: Colors.blue.withAlpha(30), // Splash color
+          splashColor: Colors.blue.withAlpha(30),
           onTap: () {
             Navigator.pushNamed(context, route);
           },
           child: Ink.image(
             image: AssetImage(imagePath),
             fit: BoxFit.cover,
-            width: 56.0, // Button size
+            width: 56.0,
             height: 56.0,
           ),
         ),

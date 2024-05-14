@@ -43,17 +43,23 @@ class _LoginScreenState extends State<LoginScreen> {
 
   login() async {
     try {
-      await context.read<AuthService>().login(_emailController.text, _passwordController.text);
+      await context
+          .read<AuthService>()
+          .login(_emailController.text, _passwordController.text);
     } on AuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.message)));
     }
   }
 
   registrar() async {
     try {
-      await context.read<AuthService>().registrar(_emailController.text, _passwordController.text);
+      await context
+          .read<AuthService>()
+          .registrar(_emailController.text, _passwordController.text);
     } on AuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.message)));
     }
   }
 
@@ -108,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Digite a senha.';
                     } else if (value.length < 6) {
-                        return 'A senha deve ter no mínimo 6 caracteres';
+                      return 'A senha deve ter no mínimo 6 caracteres';
                     }
                     return null;
                   },
@@ -126,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   child: Text(actionButton),
                   style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(50), // set the height
+                    minimumSize: const Size.fromHeight(50),
                   ),
                 ),
                 const SizedBox(height: 20),
