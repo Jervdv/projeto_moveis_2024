@@ -1,89 +1,70 @@
 import 'dart:collection';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:projeto_moveis_2024/database/db_firestore.dart';
 import 'package:projeto_moveis_2024/models/dashboard_data.dart';
 import 'package:projeto_moveis_2024/models/fuel_entry.dart';
+import 'package:projeto_moveis_2024/services/auth_service.dart';
 
 class FuelEntriesRepository extends ChangeNotifier {
   final List<FuelEntry> _fuelEntries = [];
+  late FirebaseFirestore db;
+  late AuthService auth;
 
   UnmodifiableListView<FuelEntry> get fuelEntries =>
       UnmodifiableListView(_fuelEntries);
 
-  saveFuelEntry(FuelEntry fuelEntry) {
+  FuelEntriesRepository({required this.auth}) {
+    _startRepository();
+    notifyListeners();
+  }
+
+  _startRepository() {
+    _startFirestore();
+    _fuelEntries.clear();
+    retrieveFuelEntriesFromDb();
+  }
+
+  _startFirestore() {
+    db = DBFirestore.get();
+  }
+
+
+  saveFuelEntry(FuelEntry fuelEntry) async {
+    await db.collection('users/${auth.usuario!.uid}/fuel_entries').doc().set({
+      'date': fuelEntry.date,
+      'totalPrice': fuelEntry.totalPrice,
+      'pricePerLiter': fuelEntry.pricePerLiter,
+      'odometer': fuelEntry.odometer,
+      'fuelType': fuelEntry.fuelType,
+      'gasStationName': fuelEntry.gasStationName,
+      'gasFlag': fuelEntry.gasFlag,
+    });
     _fuelEntries.add(fuelEntry);
     notifyListeners();
   }
 
-  FuelEntriesRepository() {
-    _fuelEntries.addAll(
-      [
-        FuelEntry(
-          date: DateTime(2024, 1, 31),
-          fuelType: 'Gasolina',
-          gasStationName: 'Shell Centro',
-          totalPrice: 100,
-          odometer: 42000,
-          pricePerLiter: 6.50,
-          gasFlag: 'Shell',
-        ),
-        FuelEntry(
-          date: DateTime(2024, 3, 27),
-          fuelType: 'Gasolina',
-          gasStationName: 'Shell Centro',
-          totalPrice: 100,
-          odometer: 42200,
-          pricePerLiter: 6.50,
-          gasFlag: 'Petrobras',
-        ),
-        FuelEntry(
-          date: DateTime(2024, 2, 10),
-          fuelType: 'Gasolina',
-          gasStationName: 'Shell Centro',
-          totalPrice: 150,
-          odometer: 42400,
-          pricePerLiter: 6.50,
-          gasFlag: 'Shell',
-        ),
-        FuelEntry(
-          date: DateTime(2024, 2, 10),
-          fuelType: 'Gasolina',
-          gasStationName: 'Shell Centro',
-          totalPrice: 150,
-          odometer: 42400,
-          pricePerLiter: 6.50,
-          gasFlag: 'Shell',
-        ),
-        FuelEntry(
-          date: DateTime(2024, 2, 10),
-          fuelType: 'Gasolina',
-          gasStationName: 'Shell Centro',
-          totalPrice: 150,
-          odometer: 42400,
-          pricePerLiter: 6.50,
-          gasFlag: 'Outros',
-        ),
-        FuelEntry(
-          date: DateTime(2024, 2, 10),
-          fuelType: 'Gasolina',
-          gasStationName: 'Shell Centro',
-          totalPrice: 150,
-          odometer: 42400,
-          pricePerLiter: 6.50,
-          gasFlag: 'Outros',
-        ),
-        FuelEntry(
-          date: DateTime(2024, 2, 10),
-          fuelType: 'Gasolina',
-          gasStationName: 'Shell Centro',
-          totalPrice: 150,
-          odometer: 42400,
-          pricePerLiter: 6.50,
-          gasFlag: 'Outros',
-        ),
-      ],
-    );
-    notifyListeners();
+  Future<void> retrieveFuelEntriesFromDb() async {
+    if (auth.usuario != null) {
+      final snapshot = await db
+          .collection('users/${auth.usuario!.uid}/fuel_entries')
+          .get();
+
+      _fuelEntries.clear();
+      for (var doc in snapshot.docs) {
+        _fuelEntries.add(FuelEntry(
+          date: (doc['date'] as Timestamp).toDate(),
+          totalPrice: doc['totalPrice'],
+          pricePerLiter: doc['pricePerLiter'],
+          odometer: doc['odometer'],
+          fuelType: doc['fuelType'],
+          gasStationName: doc['gasStationName'],
+          gasFlag: doc['gasFlag'],
+        ));
+      }
+      notifyListeners();
+    }
   }
 
   List<FuelEntry> getFuelEntries() {
@@ -95,6 +76,11 @@ class FuelEntriesRepository extends ChangeNotifier {
   }
 
   DashboardData getDashboardData() {
+    retrieveFuelEntriesFromDb();
+    if (fuelEntries.isEmpty) {
+      return DashboardData(totalValue: 0, meanValue: 0, totalLiters: 0, lastRefuelDate: null, entriesCount: 0, isEmpty: true);
+    }
+
     double totalValue = fuelEntries.fold(
         0, (double sum, FuelEntry entry) => sum + entry.totalPrice);
     double meanValue = totalValue / fuelEntries.length;
@@ -110,6 +96,7 @@ class FuelEntriesRepository extends ChangeNotifier {
       totalLiters: totalLiters,
       lastRefuelDate: lastRefuelDate,
       entriesCount: fuelEntries.length,
+      isEmpty: false,
     );
   }
 

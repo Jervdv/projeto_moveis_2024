@@ -72,7 +72,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                         DashboardCard(
                           title: 'Valor Total',
-                          subtitle: 'R\$ ${data.totalValue.toStringAsFixed(2)}',
+                          subtitle: 'R\$ ${!data.isEmpty ? data.totalValue.toStringAsFixed(2) : '0.00'}',
                           width: 1,
                         ),
                         Row(
@@ -81,41 +81,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             DashboardCard(
                               title: 'Gasto médio',
                               subtitle:
-                                  'R\$ ${data.meanValue.toStringAsFixed(2)}',
+                                  'R\$ ${!data.isEmpty ? data.meanValue.toStringAsFixed(2) : '0.00'}',
                               width: 0.52,
                             ),
                             DashboardCard(
                               title: 'Litros abastecidos',
                               subtitle:
-                                  '${data.totalLiters.toStringAsFixed(1)}L',
+                                  '${!data.isEmpty ? data.totalLiters.toStringAsFixed(1) : '0.00'}L',
                               width: 0.4,
                             ),
                           ],
                         ),
-                        Card(
-                          color: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: PieChart(
-                              chartRadius: 230,
-                              dataMap: pieChartData,
-                              chartType: ChartType.ring,
-                              colorList: [
-                                Colors.blue.shade600,
-                                Colors.blue.shade900,
-                                Colors.blueGrey.shade200,
-                                Colors.indigo.shade600,
-                                Colors.indigo.shade100
-                              ],
-                              chartValuesOptions: const ChartValuesOptions(
-                                  showChartValuesInPercentage: true,
-                                  decimalPlaces: 2),
-                              legendOptions: const LegendOptions(
-                                  legendPosition: LegendPosition.right,
-                                  showLegendsInRow: false),
+                        if (pieChartData != null && pieChartData.isNotEmpty)
+                          Card(
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: PieChart(
+                                chartRadius: 230,
+                                dataMap: pieChartData.isNotEmpty ? pieChartData : {},
+                                chartType: ChartType.ring,
+                                colorList: [
+                                  Colors.blue.shade600,
+                                  Colors.blue.shade900,
+                                  Colors.blueGrey.shade200,
+                                  Colors.indigo.shade600,
+                                  Colors.indigo.shade100
+                                ],
+                                chartValuesOptions: const ChartValuesOptions(
+                                    showChartValuesInPercentage: true,
+                                    decimalPlaces: 2),
+                                legendOptions: const LegendOptions(
+                                    legendPosition: LegendPosition.right,
+                                    showLegendsInRow: false),
+                              ),
                             ),
                           ),
-                        ),
                       ],
                     ),
                   ),
